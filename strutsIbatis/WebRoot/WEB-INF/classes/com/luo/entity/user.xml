@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+    <sqlMap namespace="user">
+    	<typeAlias alias="user" type="com.luo.entity.User"/>
+    	<select id="findUserById" parameterClass="int" resultClass="User">
+    		select * from t_user where id=#id#
+    	</select>
+    	<insert id="saveUser" parameterClass="User">
+    		insert into t_user values(null,#user.username#,#user.password#)
+    	</insert>
+    	<select id="queryUserList" parameterClass="map" resultMap="userMap">
+	    	<![CDATA[ select * from (select rownum rn,t.*  ]]>
+	    			<include refid="queryUserList_where"/>
+	    	<![CDATA[ and rownum<=#page.endNum#)A where rn>#page.startNum#  ]]>
+    	</select>
+    	<select id="queryUserList_count">
+    		<![CDATA[ select count(*) ]]>
+			<include refid="queryUserList_where"/> 
+    	</select>
+    	
+    	<!-- 只是一个sql作为where条件 -->
+    	<sql id="queryUserList_where">
+    		from(select * from t_user where 1=1 
+    		<dynamic>
+    			<isNotEmpty property="model.username" prepend=" and ">
+    				username like '%$model.username$%'
+    			</isNotEmpty>
+    		</dynamic>
+    		)t where 1=1 
+    	</sql>
+    	<resultMap class="user" id="userMap">
+    		<result property="username" column="username"/>
+    		<result property="password" column="password"/>
+    	</resultMap>
+    </sqlMap>
+    
