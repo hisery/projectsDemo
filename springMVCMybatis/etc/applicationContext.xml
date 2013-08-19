@@ -12,15 +12,22 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
 	<tx:annotation-driven transaction-manager="transactionManager"/>
 	<context:component-scan base-package="com.luo"/>
 
+	<!-- 第一步、打开Aop注解配置支持 -->
+	<aop:aspectj-autoproxy/>
+	
+	
 	<!-- properties文件配置 -->
 	<bean
 		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer" lazy-init="true">
 		<property name="locations">
 			<list>
-				<value>classpath:memcached.properties</value>
+				<value>classpath:redis.properties</value>
 			</list>
 		</property>
 	</bean>
+	
+	
+	<!-- 
 	<bean id="memcachedPool" class="com.danga.MemCached.SockIOPool"
 		factory-method="getInstance" init-method="initialize" destroy-method="shutDown">
 		<constructor-arg>
@@ -34,7 +41,6 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
 		<property name="nagle" value="${memcache.nagle}" />			
 		<property name="socketTO" value="${memcache.socketTO}"/>		
 	</bean>
-
 	<bean id="memcachedClient" class="com.danga.MemCached.MemCachedClient">
 		<constructor-arg>
 			<value>neeaMemcachedPool</value>
@@ -44,6 +50,25 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
 		</property>
 		<property name="compressThreshold">
 			<value>4096</value>
+		</property>
+	</bean>
+	 -->
+	 
+	<bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">
+		<property name="maxActive" value="${redis.pool.maxActive}" />
+		<property name="maxIdle" value="${redis.pool.maxIdle}" />
+		<property name="maxWait" value="${redis.pool.maxWait}" />
+		<property name="testOnBorrow" value="${redis.pool.testOnBorrow}" />
+	</bean>
+	<bean id="bean" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces">
+			<value>com.luo.service</value>
+		</property>
+		<property name="target">
+			<value>com.luo.service</value>
+		</property>
+		<property name="proxyInterfaces">
+			<value>com.luo.service</value>
 		</property>
 	</bean>
 	
@@ -59,7 +84,7 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
 		<property name="properties">
 			<props>
 				<prop key="user">root</prop>
-				<prop key="password">root</prop>
+				<prop key="password"></prop>
 				<prop key="c3p0.max_size">20</prop>
 				<prop key="c3p0.min_size">5</prop>
 			</props>
@@ -75,7 +100,4 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
 	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer"> 
 	  <property name="basePackage" value = "com.luo.dao"/> 
 	</bean> 
- 
-
-
 </beans>

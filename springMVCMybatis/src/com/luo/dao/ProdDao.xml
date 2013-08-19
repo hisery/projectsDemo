@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.kaishengit.dao.ProdDao">
+<mapper namespace="com.luo.dao.ProdDao">
 	
 	<select id="findById" parameterType="int" resultMap="prodUserMap">
 		SELECT t_prod.id,prodname,price,t_user.id as userid,username,PASSWORD

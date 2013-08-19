@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.kaishengit.dao.UserDao">
+<mapper namespace="com.luo.dao.UserDao">
 	<cache/>
 	<!-- 根据Id查找对象 -->
 	<select id="findById" parameterType="int" resultType="User">
 		SELECT id,username,password FROM t_user WHERE id = #{id}
+	</select>
+	
+	<select id="findUser" parameterType="User" resultType="User">
+		SELECT id,username,password FROM t_user WHERE username = #{username} and password=#{password}
 	</select>
 	
 	<select id="findByIdWithProd" parameterType="int" resultMap="myresultMap">
